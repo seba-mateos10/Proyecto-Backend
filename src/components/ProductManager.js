@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 
-class ProductManager {
+export default class ProductManager {
   constructor() {
     this.patch = "./productos.txt";
     this.products = [];
@@ -59,11 +59,18 @@ class ProductManager {
   };
 }
 
-const productos = new ProductManager();
+// const productos = new ProductManager();
 
-/* productos.addProduct("title1", "Description1", 100, "img1", "a123", 10);
-// productos.addProduct("title2", "Description2", 200, "img2", "b123", 20);
-// productos.addProduct("title3", "Description3", 300, "img3", "c123", 30); */
+// productos.addProduct("title1", "Description1", 100, "img1", "abc100", 10);
+// productos.addProduct("title2", "Description2", 200, "img2", "abc101", 20);
+// productos.addProduct("title3", "Description3", 300, "img3", "abc102", 30);
+// productos.addProduct("title4", "Description4", 100, "img4", "abc103", 10);
+// productos.addProduct("title5", "Description5", 200, "img5", "abc104", 20);
+// productos.addProduct("title6", "Description6", 300, "img6", "abc105", 30);
+// productos.addProduct("title7", "Description7", 100, "img7", "abc106", 10);
+// productos.addProduct("title8", "Description8", 200, "img8", "abc107", 20);
+// productos.addProduct("title9", "Description9", 300, "img9", "abc108", 30);
+// productos.addProduct("title10", "Description10", 300, "img10", "abc109", 30);
 
 // productos.getProducts();
 
@@ -71,12 +78,12 @@ const productos = new ProductManager();
 
 // productos.deleteProductsById(2);
 
-productos.updateProducts({
-  title: "title3",
-  description: "Description3",
-  price: 350,
-  img: "img3",
-  code: "c123",
-  stock: 30,
-  id: 3,
-});
+// productos.updateProducts({
+//   title: "title3",
+//   description: "Description3",
+//   price: 350,
+//   img: "img3",
+//   code: "c123",
+//   stock: 30,
+//   id: 3,
+// });
