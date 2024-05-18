@@ -1,5 +1,5 @@
 <div>
-  <h1>Desafio</h1>
+  <h1>Proyecto de backend</h1>
 
   <h3>Lista de productos:</h3>
 
@@ -20,7 +20,7 @@
     <tbody>
       {{#each productos}}
         <tr>
-          <td> {{this.id}} </td>
+          <td> {{this._id}} </td>
           <td> {{this.title}} </td>
           <td> {{this.description}} </td>
           <td> {{this.price}} </td>
@@ -36,8 +36,8 @@
           </td>
           <td>
             {{#if this.thumbnails.length}}
-              <a href="{{this.thumbnails.0}}" target="_blank">
-                {{this.thumbnails.0}}
+              <a href="{{this.thumbnails}}" target="_blank">
+                {{this.thumbnails}}
               </a>
             {{else}}
               No hay imagen

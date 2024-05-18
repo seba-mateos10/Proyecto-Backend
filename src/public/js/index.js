@@ -8,7 +8,7 @@ socket.on("productos", (productos) => {
     const row = tbody.insertRow();
 
     row.innerHTML = `
-        <td>${producto.id} </td>
+        <td>${producto._id} </td>
         <td>${producto.title} </td>
         <td>${producto.description} </td>
         <td>${producto.price} </td>
