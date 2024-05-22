@@ -33,7 +33,7 @@ router.get("/products", async (req, res) => {
 router.get("/cart/:cid", async (req, res) => {
   const { cid } = req.params;
   const carrito = await getCartByIdService(cid);
-  return res.render("cart", { title: "carrito", carrito });
+  return res.render("cart", { title: "carrito", carrito, styles: "cart.css" });
 });
 
 export default router;

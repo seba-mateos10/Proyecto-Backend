@@ -34,8 +34,8 @@
           </td>
           <td>
             {{#if this.thumbnails.length}}
-              <a href="{{this.thumbnails.[0]}}" target="_blank">
-                {{this.thumbnails.[0]}}
+              <a href="{{this.thumbnails}}" target="_blank">
+                {{this.thumbnails}}
               </a>
             {{else}}
               No hay imagen
@@ -44,7 +44,7 @@
 
           <td>
             <button class="cart-button" onclick="addToCart('{{this._id}}')">
-                <i class="fas fa-shopping-cart cart-icon"></i>
+              <i class="fas fa-shopping-cart cart-icon"></i>
             </button>
           </td>
         </tr>
@@ -52,41 +52,31 @@
     </tbody>
   </table>
 
-
-<div class="pagination">
-    <span>Límite por página: {{result.limit}} </span><br>
+  <div class="pagination">
+    <span>Límite por página: {{result.limit}} </span><br />
 
     {{#if result.query}}
-    <span>Filtrado por: {{result.query}}</span><br>
+      <span>Filtrado por: {{result.query}}</span><br />
     {{/if}}
 
     {{#if result.hasPrevPage}}
-    <a href="?page={{result.prevPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}{{/if}}">Anterior</a>
+    <a href="?page={{result.prevPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}
+    {{/if}}">Anterior</a>
+    {{/if}}
 
     <span>Pagina {{result.page}} de {{result.totalPages}} </span>
 
     {{#if result.hasNextPage}}
     <a href="?page={{result.nextPage}}&limit={{result.limit}}{{#if result.query}}&query={{result.query}}{{/if}}">Siguiente</a>
     {{/if}}
-</div>
+  </div>
 
-<script>
-    function addToCart(productId){
-        console.log({productId})
-        const idCart= "664cedcb5f77852ceda04181"
-        fetch(`/api/carts/${idCart}/product/${productId}`,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-            } 
-        })
-        .then(res => res.json())
-        then(data=>{
-            console.log(data)
-        })
-        .catch(error=>{
-            console.log("Error: ", error)
-        })
-    }
-</script>
+  <script>
+    function addToCart(productId){ console.log({productId}) const idCart=
+    "664cedcb5f77852ceda04181"
+    fetch(`/api/carts/${idCart}/product/${productId}`,{ method:"POST", headers:{
+    "Content-Type":"application/json", } }) .then(res => res.json())
+    then(data=>{ console.log(data) }) .catch(error=>{ console.log("Error: ",
+    error) }) }
+  </script>
 </div>
