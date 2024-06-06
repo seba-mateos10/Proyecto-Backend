@@ -1,7 +1,6 @@
 import { request, response } from "express";
 import { getProductsService } from "../services/products.js";
 import { getCartByIdService } from "../services/carts.js";
-import { getUserEmail, registerUser } from "../services/user.js";
 
 export const homeView = async (req = request, res = response) => {
   const limit = 50;
@@ -54,10 +53,13 @@ export const cartIdView = async (req = request, res = response) => {
 };
 
 export const loginGET = async (req = request, res = response) => {
+  if (req.session.user) return res.redirect("/");
+
   return res.render("login", { title: "Login", styles: "loginRegister.css" });
 };
 
 export const registerGET = async (req = request, res = response) => {
+  if (req.session.user) return res.redirect("/");
   return res.render("register", {
     title: "Register",
     styles: "loginRegister.css",
@@ -65,35 +67,23 @@ export const registerGET = async (req = request, res = response) => {
 };
 
 export const registerPost = async (req = request, res = response) => {
-  const { password, confirmPassword } = req.body;
-
-  if (password !== confirmPassword) return res.redirect("/register");
-
-  const user = await registerUser({ ...req.body });
-
-  if (user) {
-    const userName = `${user.name} ${user.lastName}`;
-    req.session.user = userName;
-    req.session.rol = user.rol;
-    return res.redirect("/");
-  }
-
-  return res.redirect("/register");
-};
-
-export const loginPost = async (req = request, res = response) => {
-  const { email, password } = req.body;
-
-  const user = await getUserEmail(email);
-
-  if (user && user.password === password) {
-    const userName = `${user.name} ${user.lastName}`;
-    req.session.user = userName;
-    req.session.rol = user.rol;
-    return res.redirect("/");
-  }
+  if (!req.user) return res.redirect("/register");
 
   return res.redirect("/login");
+};
+
+export const Login = async (req = request, res = response) => {
+  if (!req.user) return res.redirect("/login");
+
+  req.session.user = {
+    name: req.user.name,
+    lastName: req.user.lastName,
+    email: req.user.email,
+    rol: req.user.rol,
+    image: req.user.image,
+  };
+
+  return res.redirect("/");
 };
 
 export const logout = async (req = request, res = response) => {

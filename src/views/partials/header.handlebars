@@ -3,8 +3,15 @@
     <h1>{{title}}</h1>
     <nav>
       {{#if user}}
-        <p>Bienvenido, {{user}} </p>
+        <p>Bienvenido, {{user.email}} </p>
         <a href="/logout">Cerrar sesion</a>
+
+        {{#if user.image}}
+          <div class="profile-picture">
+            <img src="{{user.image}}" alt="Perfil de usuario" />
+          </div>
+        {{/if}}
+
       {{else}}
         <a href="/login">Iniciar sesion</a>
         <a href="/register">Registrarse</a>
