@@ -18,6 +18,10 @@ const UserSchema = new Schema({
   github: { type: Boolean, default: false },
   google: { type: Boolean, default: false },
   facebook: { type: Boolean, default: false },
+  cart_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Cart",
+  },
 });
 
 UserSchema.set("toJSON", {
