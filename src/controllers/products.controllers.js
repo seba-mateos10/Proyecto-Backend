@@ -30,19 +30,6 @@ export const addProduct = async (req = request, res = response) => {
   try {
     const { title, description, price, code, stock, category } = req.body;
 
-    if ((!title, !description, !price, !code, !stock, !category))
-      return res.status(404).json({
-        msg: "los campos [title,description,code,price,stock,category] son obligatorios",
-      });
-
-    // const existCode = await getProductByCodeService(code)
-    const existCode = await ProductsRepository.getProductByCode(code);
-
-    if (existCode)
-      return res
-        .status(400)
-        .json({ msj: "El codigo ingresado ya existe en un producto" });
-
     if (req.file) {
       const isValidExtension = validFileExtension(req.file.originalname);
 
