@@ -6,13 +6,14 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/products.controllers.js";
+import { validarJWT } from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/", getProducts);
-router.get("/:pid", getProductById);
-router.post("/", addProduct);
-router.put("/:pid", updateProduct);
-router.delete("/", deleteProduct);
+router.get("/", validarJWT, getProducts);
+router.get("/:pid", validarJWT, getProductById);
+router.post("/", [validarJWT, uploader.single("file")], addProduct);
+router.put("/:pid", [validarJWT, uploader.single("file")], updateProduct);
+router.delete("/", validarJWT, deleteProduct);
 
-export default router;
+export { router as productsRouter };
