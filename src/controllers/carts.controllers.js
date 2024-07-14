@@ -4,6 +4,7 @@ import {
   ProductsRepository,
   UsersRepository,
 } from "../repositories/index.js";
+import { config } from "dotenv";
 
 export const getCartById = async (req = request, res = response) => {
   try {

@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   facebook: { type: Boolean, default: false },
   cart_id: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: "Cart",
   },
 });

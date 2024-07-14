@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, request, response } from "express";
 import { check } from "express-validator";
 import {
   addProductInCart,
@@ -30,6 +30,18 @@ router.post(
   ],
   addProductInCart
 );
+
+router.post("/:cid/purchase", async (req = request, res = response) => {
+  try {
+    res
+      .status(200)
+      .send({ origin: config.SERVER, payload: "Quiere confirmar la compra" });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ origin: config.SERVER, payload: null, error: error.message });
+  }
+});
 
 router.delete(
   "/:cid/products/:pid",
