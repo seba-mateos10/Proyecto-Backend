@@ -1,27 +1,58 @@
 import express from "express";
-import "dotenv/config";
+import path from "path";
+import hbs from "express-handlebars";
+import passport from "passport";
+import cookieParser from "cookie-parser";
 
-//routes
-import { authRouter, productsRouter, cartsRouter } from "./routes/index.js";
+import { __dirname } from "./dirname.js";
+import { initPassport } from "./config/passport.config.js";
 
-import __dirname from "./utlis.js";
-import { dbConnection } from "./database/config.js";
+// ------- Import Routes Api -------
+
+import RoutesSession from "./routes/session/session.routes.js";
+import RoutesProduct from "./routes/product/product.routes.js";
+import RoutesCart from "./routes/cart/cart.routes.js";
+import RoutesTicket from "./routes/ticket/ticket.routes.js";
+
+// ------- Routes Render --------
+
+import RoutesRenderSession from "./routes/session/session.routes.views.js";
+import RoutesRenderProduct from "./routes/product/product.routes.views.js";
+import RoutesRenderCart from "./routes/cart/cart.routes.views.js";
+import RoutesRenderTicket from "./routes/ticket/ticket.routes.views.js";
 
 const app = express();
-const PORT = process.env.PORT;
+
+initPassport();
+app.use(passport.initialize());
+app.use(cookieParser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
 
-//endpoints
-app.use("/api/auth", authRouter);
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
+app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(`${__dirname}/views`)));
 
-//inicializamos la basde de datos
-await dbConnection();
+app.engine("hbs", hbs.engine({ extname: "hbs" }));
+app.set("views", `${__dirname}/views`);
+app.set("view engine", "hbs");
 
-app.listen(PORT, () => {
-  console.log(`Corriendo aplicacion en el puerto ${PORT}`);
-});
+// ------ Routes Api -------
+
+app.use("/api/session", RoutesSession);
+app.use("/api/products", RoutesProduct);
+app.use("/api/carts", RoutesCart);
+app.use("/api/tickets", RoutesTicket);
+
+// ------ Routes Render ------
+
+app.use("/", RoutesRenderSession);
+app.use("/products", RoutesRenderProduct);
+app.use("/carts", RoutesRenderCart);
+app.use("/tickets", RoutesRenderTicket);
+
+app.get("/error", (req, res) => res.sendStatus(401));
+app.get("/", (req, res) => res.redirect("/signin"));
+app.get("*", (req, res) => res.sendStatus(404));
+
+export default app;
