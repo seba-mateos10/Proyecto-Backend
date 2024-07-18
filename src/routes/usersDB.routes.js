@@ -25,12 +25,10 @@ router.post(
         });
         res.status(200).send({ origin: config.SERVER, payload: process });
       } else {
-        res
-          .status(400)
-          .send({
-            origin: config.SERVER,
-            payload: "El email ya se encuentra registrado",
-          });
+        res.status(400).send({
+          origin: config.SERVER,
+          payload: "El email ya se encuentra registrado",
+        });
       }
     } catch (err) {
       res

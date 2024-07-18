@@ -12,15 +12,13 @@ const manager = new UsersManagerDB();
 
 initAuthStrategies();
 
-const adminAuth = (req, res, next) => {
+export const adminAuth = (req, res, next) => {
   if (!req.session.user || req.session.user.role !== "admin")
-    return res
-      .status(401)
-      .send({
-        origin: config.SERVER,
-        payload:
-          "Acceso no autorizado: se requiere autenticación y nivel de admin",
-      });
+    return res.status(401).send({
+      origin: config.SERVER,
+      payload:
+        "Acceso no autorizado: se requiere autenticación y nivel de admin",
+    });
   next();
 };
 
@@ -44,22 +42,18 @@ router.post(
         req.session.user = filteredUser;
         req.session.save((err) => {
           if (err)
-            return res
-              .status(500)
-              .send({
-                origin: config.SERVER,
-                payload: null,
-                error: err.message,
-              });
+            return res.status(500).send({
+              origin: config.SERVER,
+              payload: null,
+              error: err.message,
+            });
           res.redirect("/products");
         });
       } else {
-        res
-          .status(401)
-          .send({
-            origin: config.SERVER,
-            payload: "Datos de acceso no válidos",
-          });
+        res.status(401).send({
+          origin: config.SERVER,
+          payload: "Datos de acceso no válidos",
+        });
       }
     } catch (err) {
       res
@@ -145,13 +139,11 @@ router.get("/logout", async (req, res) => {
   try {
     req.session.destroy((err) => {
       if (err)
-        return res
-          .status(500)
-          .send({
-            origin: config.SERVER,
-            payload: "Error al ejecutar logout",
-            error: err,
-          });
+        return res.status(500).send({
+          origin: config.SERVER,
+          payload: "Error al ejecutar logout",
+          error: err,
+        });
       res.redirect("/login");
     });
   } catch (err) {
@@ -171,13 +163,11 @@ router.get("/current", async (req, res) => {
 });
 
 router.all("*", async (req, res) => {
-  res
-    .status(404)
-    .send({
-      origin: config.SERVER,
-      payload: null,
-      error: "No se encuentra la ruta solicitada",
-    });
+  res.status(404).send({
+    origin: config.SERVER,
+    payload: null,
+    error: "No se encuentra la ruta solicitada",
+  });
 });
 
 export default router;
