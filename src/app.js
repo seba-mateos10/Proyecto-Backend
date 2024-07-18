@@ -30,10 +30,10 @@ const fileStorage = FileStore(session);
 app.use(
   session({
     store: new fileStorage({ path: "./sessions", ttl: 100, retries: 0 }),
-    // store: MongoStore.create({ mongoUrl: config.MONGODB_URI, ttl: 600 }),
-    secret: config.SECRET,
+
+    secret: "seba_1234567",
     resave: true,
-    // cookie: { secure: false }, // Ponlo en true si usas HTTPS
+    // cookie: { secure: false }, // Poner en true si usas HTTPS
     saveUninitialized: true,
   })
 );
@@ -61,7 +61,6 @@ const httpServer = app.listen(config.PORT, async () => {
 const socketServer = new Server(httpServer);
 app.set("socketServer", socketServer);
 
-//Escucho a un cliente
 socketServer.on("connection", async (client) => {
   const messageManager = new MessageManagerDB();
   const savedMessages = await messageManager.getMessages();

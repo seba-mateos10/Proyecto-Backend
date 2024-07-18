@@ -1,19 +1,20 @@
 <style>
-  .login-container { max-width: 360px; margin: auto; margin-top: 64px; padding:
-  32px; border-radius: 0.5em; color: #333; border: 1px solid #bbb;
-  background-color: #ccc; } .a2 { color: #333; } .a2:hover { color: #000; }
+  .login-container { max-width: 370px; margin: auto; margin-top: 64px; padding:
+  32px; border-radius: 0.5em; color: #1c1c1c; border: 1px solid #575252;
+  background-color: #2883eb; } .btn-100 { width: 100%; margin-bottom: 2 rem; }
+  .a2 { color: #333333; } .a2:hover { color: #000; } .logo { border-radius:
+  50px; }
 </style>
 
 <div class="login-container">
   <h1 class="text-center"><img
-      src="static/img/LogoGOAT.png"
+      class="logo"
+      src="static/img/Logo.jpg"
       alt="Logo"
       width="80"
       height="80"
     /></h1>
-  <h1 class="text-center"><b>GOAT</b></h1>
-
-  <h2><b>Login de usuario</b></h2>
+  <h1 class="text-center"><b>Login de usuario</b></h1>
 
   <form action="/api/sessions/pplogin" method="post" style="margin-top: 32px;">
     <div class="input-group" style="width: 300px; margin-bottom: 32px;">

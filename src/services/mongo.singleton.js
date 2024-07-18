@@ -16,11 +16,11 @@ export default class MongoSingleton {
     if (!this.#instance) {
       this.#instance = new MongoSingleton();
       console.log(
-        `Conexión bbdd CREADA. Servidor Express activo en puerto ${config.PORT}, con conexion a Mongoose: ${config.MONGODB_URI}.`
+        `Conexión 1234 Creada. Servidor Express activo en el puerto ${config.PORT}, con conexion a Mongoose: ${config.MONGODB_URI}.`
       );
     } else {
       console.log(
-        `Conexión bbdd RECUPERADA. Servidor Express activo en puerto ${config.PORT}, con conexion a Mongoose: ${config.MONGODB_URI}.`
+        `Conexión 1234 Recuperada. Servidor Express activo en el puerto ${config.PORT}, con conexion a Mongoose: ${config.MONGODB_URI}.`
       );
     }
 
