@@ -1,58 +1,83 @@
 import express from "express";
-import path from "path";
-import hbs from "express-handlebars";
+import mongoose from "mongoose";
+import handlebars from "express-handlebars";
+import { Server } from "socket.io";
+import config from "./config.js";
+import productsRouter from "./routes/productDB.routes.js";
+import cartsRouter from "./routes/cartsDB.routes.js";
+import usersRouter from "./routes/usersDB.routes.js";
+import viewsRouter from "./routes/views.routes.js";
+import ProductManagerDB from "./controllers/ProductManagerDB.js";
+import MessageManagerDB from "./controllers/MessageManagerDB.js";
 import passport from "passport";
+import session from "express-session";
+import FileStore from "session-file-store";
+// import MongoStore from 'connect-mongo';
 import cookieParser from "cookie-parser";
-
-import { __dirname } from "./dirname.js";
-import { initPassport } from "./config/passport.config.js";
-
-// ------- Import Routes Api -------
-
-import RoutesSession from "./routes/session/session.routes.js";
-import RoutesProduct from "./routes/product/product.routes.js";
-import RoutesCart from "./routes/cart/cart.routes.js";
-import RoutesTicket from "./routes/ticket/ticket.routes.js";
-
-// ------- Routes Render --------
-
-import RoutesRenderSession from "./routes/session/session.routes.views.js";
-import RoutesRenderProduct from "./routes/product/product.routes.views.js";
-import RoutesRenderCart from "./routes/cart/cart.routes.views.js";
-import RoutesRenderTicket from "./routes/ticket/ticket.routes.views.js";
+import sessionRouter from "./routes/sessions.routes.js";
+import cors from "cors";
+import MongoSingleton from "./services/mongo.singleton.js";
 
 const app = express();
 
-initPassport();
-app.use(passport.initialize());
-app.use(cookieParser());
-
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(`${__dirname}/public`));
-app.use(express.static(path.join(`${__dirname}/views`)));
+app.use(cookieParser(config.SECRET));
 
-app.engine("hbs", hbs.engine({ extname: "hbs" }));
-app.set("views", `${__dirname}/views`);
-app.set("view engine", "hbs");
+const fileStorage = FileStore(session);
+app.use(
+  session({
+    store: new fileStorage({ path: "./sessions", ttl: 100, retries: 0 }),
+    // store: MongoStore.create({ mongoUrl: config.MONGODB_URI, ttl: 600 }),
+    secret: config.SECRET,
+    resave: true,
+    // cookie: { secure: false }, // Ponlo en true si usas HTTPS
+    saveUninitialized: true,
+  })
+);
 
-// ------ Routes Api -------
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use("/api/session", RoutesSession);
-app.use("/api/products", RoutesProduct);
-app.use("/api/carts", RoutesCart);
-app.use("/api/tickets", RoutesTicket);
+app.engine("handlebars", handlebars.engine());
+app.set("views", `${config.DIRNAME}/views`);
+app.set("view engine", "handlebars");
 
-// ------ Routes Render ------
+app.use("/", viewsRouter);
 
-app.use("/", RoutesRenderSession);
-app.use("/products", RoutesRenderProduct);
-app.use("/carts", RoutesRenderCart);
-app.use("/tickets", RoutesRenderTicket);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/sessions", sessionRouter);
 
-app.get("/error", (req, res) => res.sendStatus(401));
-app.get("/", (req, res) => res.redirect("/signin"));
-app.get("*", (req, res) => res.sendStatus(404));
+app.use("/static", express.static(`${config.DIRNAME}/public`));
 
-export default app;
+const httpServer = app.listen(config.PORT, async () => {
+  MongoSingleton.getInstance();
+});
+
+const socketServer = new Server(httpServer);
+app.set("socketServer", socketServer);
+
+//Escucho a un cliente
+socketServer.on("connection", async (client) => {
+  const messageManager = new MessageManagerDB();
+  const savedMessages = await messageManager.getMessages();
+  const messageRender = { messageRender: savedMessages };
+  client.emit("cargaMessages", messageRender);
+
+  const manager = new ProductManagerDB();
+  const products = await manager.getProducts();
+  const prodRender = { prodRender: products.docs };
+  client.emit("cargaProducts", prodRender);
+
+  client.on("newMessage", async (data) => {
+    console.log(
+      `Mensaje recibido desde: ${client.id}. Mensaje:${data.message}, con usuario: ${data.user}`
+    );
+    const message = await messageManager.saveMessage(data);
+    socketServer.emit("newMessageConfirmation", message);
+  });
+});

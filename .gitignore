@@ -1,4 +1,2 @@
-node_modules
-pnpm-lock.yaml
-.env
-.env.*
+node_modules/
+/sessions

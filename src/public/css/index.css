@@ -1,0 +1,20 @@
+.productos {
+  padding: 1em;
+  color: white;
+}
+body {
+  background-color: #333;
+  color: white;
+}
+
+.card-img-container {
+  height: 180px; /* Define la altura deseada */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.card-img-container img {
+  height: 100%;
+  width: 85%; /* Asegura que la imagen mantenga su proporción */
+}
