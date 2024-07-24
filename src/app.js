@@ -11,6 +11,7 @@ const { socketProducts } = require("./utils/socketProducts.js");
 const { initPassportGithub } = require("./config/passportConfig.js");
 
 const { errorHandling } = require("./middleware/errorHandling.js");
+const { addLogger, logger } = require("./utils/logger.js");
 const app = express();
 require("dotenv");
 
@@ -49,6 +50,8 @@ app.use(
   })
 );
 
+app.use(addLogger);
+
 //passport
 initPassport();
 initPassportGithub();
@@ -68,7 +71,7 @@ app.use(errorHandling);
 
 const PORT = process.env.PORT;
 const httpServer = app.listen(PORT, () => {
-  console.log(`Running in the port: ${PORT}`);
+  logger.info(`Running in the port: ${PORT}`);
 });
 
 const socketServer = new Server(httpServer);
