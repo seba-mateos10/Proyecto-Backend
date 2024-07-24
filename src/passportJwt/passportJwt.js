@@ -30,6 +30,23 @@ const initPassport = () => {
       }
     )
   );
+
+  passport.use(
+    "urlJwt",
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtratcJWT.fromExtractors([cookieExtratc]),
+        secretOrKey: objectConfig.JwtKeySecret,
+      },
+      async (jwt_payload, done) => {
+        try {
+          return done(null, jwt_payload);
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
 };
 
 module.exports = initPassport;

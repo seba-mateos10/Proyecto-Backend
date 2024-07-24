@@ -12,6 +12,15 @@ const generateToken = (user) => {
   return token;
 };
 
+const generateTokenUrl = (user) => {
+  const token = jsonWebToken.sign(
+    JSON.parse(JSON.stringify(user)),
+    JWT_PRIVATE_KEY,
+    { expiresIn: "1h" }
+  );
+  return token;
+};
+
 const authToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
@@ -35,4 +44,5 @@ const authToken = (req, res, next) => {
 module.exports = {
   generateToken,
   authToken,
+  generateTokenUrl,
 };
