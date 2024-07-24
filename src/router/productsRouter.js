@@ -28,7 +28,7 @@ router.put(
 router.delete(
   "/:pid",
   passportCall("jwt"),
-  authorization("admin"),
+  authorization(["admin", "premium"]),
   prodController.deleteProduct
 );
 

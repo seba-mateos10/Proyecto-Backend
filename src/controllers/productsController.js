@@ -125,30 +125,24 @@ class ProductController {
       if (!product)
         throw { status: "Error", message: "The product does not exist" };
 
-      if (req.user.role == "premium") {
-        if (req.user.email !== product.owener) {
-          throw {
-            status: "Error",
-            message: "you do not have permission to update this product",
-          };
-        }
-
+      const updateProduct = async (pid, updateBody) => {
         await productService.updateProduct(pid, updateBody);
-        res
-          .status(200)
-          .send({
-            status: "Updated product",
-            message: `The product was updated ${product.title}`,
-          });
+
+        res.status(200).send({
+          status: "Updated product",
+          message: `The product was updated ${product.title}`,
+        });
+      };
+
+      if (req.user.role == "premium") {
+        req.user.email !== product.owener
+          ? res.status(403).send({
+              status: "Error",
+              message: "you do not have permission to update this product",
+            })
+          : updateProduct(pid, updateBody);
       } else {
-        let result = await productService.updateProduct(pid, updateBody);
-        if (result)
-          return res
-            .status(200)
-            .send({
-              status: "The product was successfully updated",
-              payload: result,
-            });
+        updateProduct(pid, updateBody);
       }
     } catch (error) {
       res.status(404).send(error);
@@ -158,18 +152,33 @@ class ProductController {
   deleteProduct = async (req, res) => {
     try {
       let { pid } = req.params;
-      let result = await productService.deleteProduct(pid);
+      let product = await productService.getProduct({ _id: pid });
 
-      if (!result)
-        throw { status: "Error", message: "Could not delete product" };
+      if (!product)
+        throw {
+          status: "Error",
+          message: "The product to delete was not found",
+        };
 
-      if (result)
-        return res.status(200).send({
-          status: "The product is deleted successfully",
-          payload: result,
+      const removeProduct = async (pid) => {
+        await productService.deleteProduct(pid);
+        res.status(200).send({
+          status: "Removed product",
+          message: `Product ${product.title} is removed successfully`,
         });
+      };
+      if (req.user.role == "premium") {
+        req.user.email !== product.owener
+          ? res.status(403).send({
+              status: "Error",
+              message: `You don't have permission to delete because you are ${req.user.role}`,
+            })
+          : removeProduct(pid);
+      } else {
+        removeProduct(pid);
+      }
     } catch (error) {
-      res.status(404).send(error);
+      res.send(error);
     }
   };
 }
