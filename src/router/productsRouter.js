@@ -21,7 +21,7 @@ router.post(
 router.put(
   "/:pid",
   passportCall("jwt"),
-  authorization("admin"),
+  authorization(["admin", "premium"]),
   prodController.updateProduct
 );
 
