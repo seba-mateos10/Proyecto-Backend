@@ -1,135 +1,72 @@
-<style>
-
-  .register-container { max-width: 370px; margin: auto; margin-top: 64px;
-  padding: 32px; border-radius: 0.5em; color: #1c1c1c; border: 1px solid
-  #575252; background-color: #2883eb; } .btn-100 { width: 100%; margin-bottom: 2
-  rem; } .a2 { color: #333333; } .a2:hover { color: #000; } .logo {
-  border-radius: 50px; }
-</style>
-
-<script
-  src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.8/dist/sweetalert2.all.min.js"
-></script>
-
-<div class="register-container">
-  <h1 class="text-center"><img
-      class="logo"
-      src="static/img/Logo.jpg"
-      alt="Logo"
-      width="80"
-      height="80"
-    /></h1>
-  <h1 class="text-center"><b>Registro</b></h1>
-  <form id="registerUserForm" style="margin-top: 32px;">
-    <div class="input-group" style="width: 100%; margin-bottom: 8px;">
-      <span class="input-group-text" id="group1"><i
-          class="fa-solid fa-user"
-        ></i></span>
-      <input
-        type="text"
-        id="firstName"
-        name="firstName"
-        class="form-control"
-        placeholder="Nombre"
-        required="required"
-        autocomplete="nombre"
-        autofocus="autofocus"
-      />
-    </div>
-
-    <div class="input-group" style="width: 100%; margin-bottom: 8px;">
-      <span class="input-group-text" id="group2"><i
-          class="fa-solid fa-user"
-        ></i></span>
-      <input
-        type="text"
-        id="lastName"
-        name="lastName"
-        class="form-control"
-        placeholder="Apellido"
-        required="required"
-        autocomplete="apellido"
-      />
-    </div>
-
-    <div class="input-group" style="width: 100%; margin-bottom: 8px;">
-      <span class="input-group-text" id="group3"><i
-          class="fa-solid fa-envelope"
-        ></i></span>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        class="form-control"
-        placeholder="Email"
-        required="required"
-        autocomplete="email"
-      />
-    </div>
-
-    <div class="input-group" style="width: 100%; margin-bottom: 8px;">
-      <span class="input-group-text" id="group4"><i
-          class="fa-solid fa-venus-mars"
-        ></i></span>
-      <input
-        type="number"
-        id="age"
-        name="age"
-        class="form-control"
-        placeholder="Edad"
-        required="required"
-        autocomplete="age"
-      />
-    </div>
-
-    <div class="input-group" style="width: 100%; margin-bottom: 32px;">
-      <span class="input-group-text" id="group5"><i
-          class="fa-solid fa-lock"
-        ></i></span>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        class="form-control"
-        required="required"
-        placeholder="Password"
-        autocomplete="password"
-      />
-    </div>
-
-    <button type="submit" class="btn btn-success btn-100">Registrarse</button>
-
-    {{#if msg}}
-      <div style="margin-top: 24px;">
-        <div class="alert alert-danger" role="alert">{{msg}}</div>
+<article class="backgroundRegister">
+  <div class="register">
+    <h2 class="text-center p-1">Register</h2>
+    <form
+      class="row g-3 formRegister p-2"
+      action="/api/session/register"
+      method="post"
+    >
+      <div class="col-md-6">
+        <label class="form-label">First name</label>
+        <input
+          name="firtsName"
+          type="text"
+          class="form-control"
+          placeholder="First name"
+        />
       </div>
-    {{/if}}
-
-    <div style="margin-top: 24px;">
-      Ya tenés cuenta?:
-      <a class="a2" href="/login">Ingresá aca</a>
-    </div>
-  </form>
-</div>
-
-<script type="module">
-
-  registerUserForm.addEventListener('submit', async (evt) => {
-  evt.preventDefault(); const firstName =
-  document.getElementById('firstName').value; const lastName =
-  document.getElementById('lastName').value; const email =
-  document.getElementById('email').value; const age =
-  document.getElementById('age').value; const password =
-  document.getElementById('password').value; try { const process = await
-  fetch(`/api/users`, { method: 'POST', headers: { 'Content-Type':
-  'application/json' }, body: JSON.stringify({ firstName, lastName, email, age,
-  password }) }); const result = await process.json(); console.log(process); if
-  (process.ok) { Swal.fire({ title: 'Usuario registrado', text: result.mensaje,
-  icon: 'success', confirmButtonText: 'OK' }).then(() => {
-  registerUserForm.reset(); window.location.href = '/login'; }); } else {
-  Swal.fire({ title: 'Error', text: result.error, icon: 'error',
-  confirmButtonText: 'OK' }); } } catch (error) { Swal.fire({ title: 'Error',
-  text: 'Hubo un problema al registrar el usuario.', icon: 'error',
-  confirmButtonText: 'OK' }); } });
-
-</script>
+      <div class="col-md-6">
+        <label class="form-label">Last name</label>
+        <input
+          name="lastName"
+          type="text"
+          class="form-control"
+          placeholder="Last name"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="inputPassword5" class="form-label">User</label>
+        <div class="input-group flex-nowrap">
+          <span class="input-group-text" id="addon-wrapping">@</span>
+          <input
+            name="userName"
+            type="text"
+            class="form-control"
+            placeholder="Username"
+            aria-label="Username"
+            aria-describedby="addon-wrapping"
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Birth date</label>
+        <input name="birthDate" type="date" class="form-control" />
+      </div>
+      <div class="col-md-12">
+        <label for="exampleFormControlInput1" class="form-label">Email address</label>
+        <input
+          name="email"
+          type="email"
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="name@example.com"
+        />
+      </div>
+      <div class="col-md-12">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input
+          name="password"
+          type="password"
+          class="form-control"
+          id="exampleInputPassword1"
+        />
+      </div>
+      <div class="buttons col-md-12">
+        <li class="page-item btn btn-dark" style="color:white">
+          <a class="page-link" href="/login"> Log In </a>
+        </li>
+        <button type="submit" class="btn btn-success">Create user</button>
+      </div>
+    </form>
+  </div>
+</article>

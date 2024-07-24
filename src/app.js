@@ -1,82 +1,75 @@
-import express from "express";
-import mongoose from "mongoose";
-import handlebars from "express-handlebars";
-import { Server } from "socket.io";
-import config from "./config.js";
-import productsRouter from "./routes/productDB.routes.js";
-import cartsRouter from "./routes/cartsDB.routes.js";
-import usersRouter from "./routes/usersDB.routes.js";
-import viewsRouter from "./routes/views.routes.js";
-import ProductManagerDB from "./controllers/ProductManagerDB.js";
-import MessageManagerDB from "./controllers/MessageManagerDB.js";
-import passport from "passport";
-import session from "express-session";
-import FileStore from "session-file-store";
-// import MongoStore from 'connect-mongo';
-import cookieParser from "cookie-parser";
-import sessionRouter from "./routes/sessions.routes.js";
-import cors from "cors";
-import MongoSingleton from "./services/mongo.singleton.js";
+const express = require("express");
+const handlebars = require("express-handlebars");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const mongoStore = require("connect-mongo");
+const passport = require("passport");
+const cors = require("cors");
+const { Server } = require("socket.io");
+const initPassport = require("./passportJwt/passportJwt.js");
+const { socketProducts } = require("./utils/socketProducts.js");
+const { initPassportGithub } = require("./config/passportConfig.js");
 
+const { errorHandling } = require("./middleware/errorHandling.js");
 const app = express();
+require("dotenv");
 
-app.use(cors({ origin: "*" }));
-app.use(express.json());
+const viewRouter = require("./router/viewsRouter.js");
+const userRouter = require("./router/userRouter.js");
+const sessionRouter = require("./router/sessionRouter.js");
+const productsRouter = require("./router/productsRouter.js");
+const cartRouter = require("./router/cartRouter.js");
+const ticketRouter = require("./router/ticketRouter.js");
+const mockingRouter = require("./router/mockingRouter.js");
+const myProfileRouter = require("./router/myProfileRouter.js");
+
+// config de app
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use("/static", express.static(__dirname + "/public"));
+app.use(cors());
 
-app.use(cookieParser(config.SECRET));
+//configuracion de Handlebars
+app.engine("handlebars", handlebars.engine());
+app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars");
 
-const fileStorage = FileStore(session);
+// middleware
+app.use(cookieParser("p@l@Br@s3cr3t0"));
 app.use(
   session({
-    store: new fileStorage({ path: "./sessions", ttl: 100, retries: 0 }),
-
-    secret: "seba_1234567",
-    resave: true,
-    // cookie: { secure: false }, // Poner en true si usas HTTPS
-    saveUninitialized: true,
+    store: mongoStore.create({
+      mongoUrl: process.env.MONGO_KEY_SECRET,
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 60 * 60 * 1000,
+    }),
+    secret: "s3cr3t0c0d3",
+    resave: false,
+    saveUninitialized: false,
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+//passport
+initPassport();
+initPassportGithub();
+passport.use(passport.initialize());
+passport.use(passport.session());
 
-app.engine("handlebars", handlebars.engine());
-app.set("views", `${config.DIRNAME}/views`);
-app.set("view engine", "handlebars");
-
-app.use("/", viewsRouter);
-app.use("/api/sessions", sessionRouter);
-
+//rutas
+app.use("/", viewRouter);
+app.use("/api/users", userRouter);
+app.use("/api/session", sessionRouter);
 app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/api/users", usersRouter);
+app.use("/api/carts", cartRouter);
+app.use("/api/tickets", ticketRouter);
+app.use("/mocking", mockingRouter);
+app.use("/myProfile", myProfileRouter);
+app.use(errorHandling);
 
-app.use("/static", express.static(`${config.DIRNAME}/public`));
-
-const httpServer = app.listen(config.PORT, async () => {
-  MongoSingleton.getInstance();
+const PORT = process.env.PORT;
+const httpServer = app.listen(PORT, () => {
+  console.log(`Running in the port: ${PORT}`);
 });
 
 const socketServer = new Server(httpServer);
-app.set("socketServer", socketServer);
-
-socketServer.on("connection", async (client) => {
-  const messageManager = new MessageManagerDB();
-  const savedMessages = await messageManager.getMessages();
-  const messageRender = { messageRender: savedMessages };
-  client.emit("cargaMessages", messageRender);
-
-  const manager = new ProductManagerDB();
-  const products = await manager.getProducts();
-  const prodRender = { prodRender: products.docs };
-  client.emit("cargaProducts", prodRender);
-
-  client.on("newMessage", async (data) => {
-    console.log(
-      `Mensaje recibido desde: ${client.id}. Mensaje:${data.message}, con usuario: ${data.user}`
-    );
-    const message = await messageManager.saveMessage(data);
-    socketServer.emit("newMessageConfirmation", message);
-  });
-});
+socketProducts(socketServer);

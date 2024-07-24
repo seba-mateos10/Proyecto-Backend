@@ -1,67 +1,39 @@
-<style>
-  .login-container { max-width: 370px; margin: auto; margin-top: 64px; padding:
-  32px; border-radius: 0.5em; color: #1c1c1c; border: 1px solid #575252;
-  background-color: #2883eb; } .btn-100 { width: 100%; margin-bottom: 2 rem; }
-  .a2 { color: #333333; } .a2:hover { color: #000; } .logo { border-radius:
-  50px; }
-</style>
-
-<div class="login-container">
-  <h1 class="text-center"><img
-      class="logo"
-      src="static/img/Logo.jpg"
-      alt="Logo"
-      width="80"
-      height="80"
-    /></h1>
-  <h1 class="text-center"><b>Login de usuario</b></h1>
-
-  <form action="/api/sessions/pplogin" method="post" style="margin-top: 32px;">
-    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
-      <span class="input-group-text" id="group1"><i
-          class="fa-solid fa-user"
-        ></i></span>
-      <input
-        type="text"
-        name="email"
-        class="form-control"
-        placeholder="Username"
-        required="required"
-        autofocus="autofocus"
-      />
-    </div>
-
-    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
-      <span class="input-group-text" id="group2"><i
-          class="fa-solid fa-lock"
-        ></i></span>
-      <input
-        type="password"
-        name="password"
-        class="form-control"
-        placeholder="Password"
-        required="required"
-      />
-    </div>
-
-    {{#if showError}}
-      <div class="alert alert-danger" role="alert" style="margin-top: 16px;">
-        {{errorMessage}}
+<article class="backgroundLogin">
+  <div class="login">
+    <h3 class="text-center">Log In</h3>
+    <form id="formCookie" action="/api/session/login" method="post">
+      <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Email address</label>
+        <input
+          name="email"
+          type="email"
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="My email"
+        />
       </div>
-    {{/if}}
-
-    <button type="submit" class="btn btn-success">Ingresar</button>
-
-    <div style="margin-top: 24px;">
-      Aún no tenés cuenta?:
-      <a class="a2" href="/register">Registrate</a>
-    </div>
-  </form>
-
-  <div style="margin-top: 24px;">
-    <button
-      class="btn btn-info submit_btn"
-      onclick="window.location.replace('/api/sessions/ghlogin')"
-    >Github</button>
+      <div class="mb-4">
+        <label for="inputPassword5" class="form-label">Password</label>
+        <input
+          name="password"
+          type="password"
+          name="password"
+          id="inputPassword5"
+          class="form-control"
+          placeholder="My password"
+        />
+      </div>
+      <div class="mb-4 buttons">
+        <button type="submit" class="btn btn-primary">Log in</button>
+        <li class="page-item btn btn-dark" style="color:white">
+          <a class="page-link" href="/api/session/github">Log in whit Git Hub
+          </a>
+        </li>
+        <li class="page-item btn btn-success" style="color:white">
+          <a class="page-link" href="/register"> Create user </a>
+        </li>
+      </div>
+    </form>
   </div>
-</div>
+</article>
+{{! <script src="/static/javascript/login.js"></script> }}
