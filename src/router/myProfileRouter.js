@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { userService, cartService } = require("../service/services.js");
-const passportCall = require("../passportJwt/passportCall.js");
+const { passportCall } = require("../passportJwt/passportCall.js");
 
 const router = Router();
 
@@ -11,12 +11,10 @@ router.get("/", passportCall("jwt"), async (req, res) => {
 
     user
       ? res.status(200).send({ status: "success", toInfo: user })
-      : res
-          .status(404)
-          .send({
-            status: "Error",
-            message: "Your information does not exist",
-          });
+      : res.status(404).send({
+          status: "Error",
+          message: "Your information does not exist",
+        });
   } catch (error) {
     console.log(error);
   }

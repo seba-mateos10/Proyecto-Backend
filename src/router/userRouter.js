@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { UserController } = require("../controllers/userController.js");
-const passportCall = require("../passportJwt/passportCall");
+const { passportCall } = require("../passportJwt/passportCall");
 const { authorization } = require("../passportJwt/authorization");
 
 const router = Router();
