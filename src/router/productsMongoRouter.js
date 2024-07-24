@@ -14,7 +14,7 @@ router.get("/:pid", passportCall("jwt"), prodController.getProduct);
 router.post(
   "/",
   passportCall("jwt"),
-  authorization("admin"),
+  authorization(["admin", "premium"]),
   prodController.createProduct
 );
 
