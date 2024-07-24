@@ -19,7 +19,15 @@ class ProductsRespository {
     }
   };
 
-  addProduct = async (title, description, price, thumbnails, code, stock) => {
+  addProduct = async (
+    title,
+    description,
+    price,
+    thumbnails,
+    code,
+    stock,
+    owener
+  ) => {
     try {
       return await this.dao.create({
         title,
@@ -28,6 +36,7 @@ class ProductsRespository {
         thumbnails,
         code,
         stock,
+        owener,
       });
     } catch (error) {
       console.log(error);

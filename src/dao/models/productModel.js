@@ -29,6 +29,10 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
+  owener: {
+    type: String,
+    default: "admin",
+  },
 });
 
 productSchema.plugin(mongoosePaginate);

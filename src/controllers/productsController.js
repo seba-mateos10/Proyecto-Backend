@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const { CustomError } = require("../customErrors/customError.js");
 const { typeErrors } = require("../customErrors/typeErrors.js");
 const { generateInfoProductError } = require("../customErrors/info.js");
+const { logger } = require("../utils/logger.js");
 
 class ProductController {
   getProductsAll = async (req, res) => {
@@ -56,6 +57,7 @@ class ProductController {
     try {
       const { title, description, price, thumbnails, stock } = req.body;
       const code = uuidv4();
+      const owener = req.user.email;
 
       //validacion si los campos estan vacios
       if (!title || !description || !price || !thumbnails || !stock) {
@@ -68,6 +70,7 @@ class ProductController {
             thumbnails,
             stock,
             code,
+            owener,
           }),
           message: "Error trying to create product",
           code: typeErrors.INVALID_TYPE_ERROR,
