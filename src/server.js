@@ -14,9 +14,9 @@ const { socketProducts } = require("./utils/socketProducts.js");
 const { initPassportGithub } = require("./config/passportConfig.js");
 const { errorHandling } = require("./middleware/errorHandling.js");
 const { addLogger, logger } = require("./utils/logger.js");
-require("dotenv");
 const swaggerUiExpress = require("swagger-ui-express");
-const { specs } = require("./utils/swaggerJsDoc.js");
+const swaggerJsDoc = require("swagger-jsdoc");
+require("dotenv");
 
 const viewRouter = require("./router/viewsRouter.js");
 const userRouter = require("./router/userRouter.js");
@@ -72,6 +72,19 @@ initPassport();
 initPassportGithub();
 passport.use(passport.initialize());
 passport.use(passport.session());
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Api Documents",
+      description: "Documentation of the following api's",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yml`],
+};
+
+const specs = swaggerJsDoc(swaggerOptions);
 
 //rutas
 app.use("/", viewRouter);
