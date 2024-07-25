@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const ProductDao = require("../src/daos/mongoDb/productDaoMongo.js");
-const Assert = require("assert");
+const chai = require("chai");
 
 mongoose.connect(
   "mongodb+srv://sebitamateos1080:EdQz5XRClkLkwVo7@sebamateos.y8yajgz.mongodb.net/"
 );
-const assert = Assert.strict;
+const expect = chai.expect;
 
-describe("testing productDao", () => {
+describe("testing productDao en chai", () => {
   before(function () {
     this.dao = new ProductDao();
   });
@@ -17,12 +17,15 @@ describe("testing productDao", () => {
   });
   it("Bring all the products correctly", async function () {
     const result = await this.dao.get();
-    assert.strictEqual(Array.isArray(result), true);
+    expect(result).to.be.deep.equal([]);
+    expect(result).deep.equal([]);
+    expect(Array.isArray(result)).to.be.ok;
+    expect(Array.isArray(result)).to.be.equal(true);
   });
   it("A product is created", async function () {
     const productMock = {
-      title: "prod test",
-      description: "prod de testing",
+      title: "prod test chai",
+      description: "prod de testing chai",
       price: 1234,
       thumbnails: "https://www.test.com/image",
       code: "2ffrt5543",
@@ -31,23 +34,33 @@ describe("testing productDao", () => {
     };
 
     const result = await this.dao.create(productMock);
-    const product = await this.dao.getBy({ title: result.title });
-    console.log(product);
-    assert.ok(typeof product, "object");
+    expect(result).to.be.ok;
   });
   it("A product is updated", async function () {
-    let pid = "64d1819dd1cfa0d996f83022";
+    let pid = "64d19b61914c2466615a6069";
     let updateBody = {
-      title: "Producto testing",
+      title: "Prod Chai",
     };
 
     const productUpdate = await this.dao.update(pid, updateBody);
     const product = await this.dao.getBy({ _id: pid });
-    assert.strictEqual(product.title, updateBody.title);
+    expect(productUpdate).to.be.ok;
+    expect(product).to.have.property("title", "Prod Chai");
   });
   it("A product is removed", async function () {
-    let pid = "64d1819dd1cfa0d996f83022";
-    const result = await this.dao.delete(pid);
-    assert.strictEqual(typeof result, "object");
+    const productMock = {
+      title: "prod test chai",
+      description: "prod de testing chai",
+      price: 1234,
+      thumbnails: "https://www.test.com/image",
+      code: "2ffrt5543",
+      stock: 24,
+      owener: "testingUser@gmail.com",
+    };
+
+    const productCreate = await this.dao.create(productMock);
+    const productRemove = await this.dao.delete(productCreate._id);
+    expect(productRemove).to.be.ok;
+    expect(productCreate).to.have.property("title" || "owener");
   });
 });
