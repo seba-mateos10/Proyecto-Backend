@@ -66,7 +66,7 @@ class SessionController {
 
       //Validacion si existe o no el password
       if (!validPassword(password, user))
-        throw { status: "error", password: "Invalid password" };
+        throw { status: "error", message: "Invalid password" };
 
       //Validacion de usuario ADMIN
       if (
