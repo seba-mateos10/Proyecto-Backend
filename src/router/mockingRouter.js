@@ -24,7 +24,7 @@ router.get("/mockingproducts", (req, res) => {
     stock: faker.number.int(100),
     code: faker.finance.bitcoinAddress(),
   };
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 1000; i++) {
     products.push(product);
   }
   res.send({
