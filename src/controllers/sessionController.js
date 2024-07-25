@@ -83,7 +83,7 @@ class SessionController {
         ? res
             .status(200)
             .cookie("CoderCookieToken", Accesstoken, {
-              maxAge: 60 * 60 * 100,
+              maxAge: 60 * 60 * 1000,
               httpOnly: true,
             })
             .redirect("/api/products")
@@ -106,12 +106,10 @@ class SessionController {
       const user = await userService.getUser({ email });
 
       if (!user) {
-        return res
-          .status(502)
-          .send({
-            status: "Error",
-            message: "The user could not be found in the database",
-          });
+        return res.status(502).send({
+          status: "Error",
+          message: "The user could not be found in the database",
+        });
       }
 
       if (user) {
@@ -131,12 +129,10 @@ class SessionController {
           maxAge: 60 * 60 * 100,
           httpOnly: true,
         });
-        return res
-          .status(200)
-          .send({
-            status: "Success",
-            message: "An email was sent to verify your identity",
-          });
+        return res.status(200).send({
+          status: "Success",
+          message: "An email was sent to verify your identity",
+        });
       }
     } catch (error) {
       console.log(error);
