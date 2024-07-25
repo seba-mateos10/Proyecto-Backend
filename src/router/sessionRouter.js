@@ -25,7 +25,7 @@ router.post(
 router.get(
   "/current",
   passportCall("jwt"),
-  authorization("user"),
+  authorization(["user", "premium", "admin"]),
   sessionControler.infoCurrent
 );
 
