@@ -22,15 +22,12 @@ class UserController {
 
   getById = async (req, res) => {
     try {
-      let { uid } = req.params;
-      let user = await userService.getUser({ _id: uid });
-      if (!user)
-        return res.send({ status: "error", message: "User not available" });
+      const { uid } = req.params;
+      const user = await userService.getUser({ _id: uid });
 
-      res.send({
-        status: "the user was found",
-        payload: user,
-      });
+      !user
+        ? res.send({ status: "error", message: "User not available" })
+        : res.send({ status: "the user was found", payload: user });
     } catch (error) {
       console.log(error);
       return res.status(411).send(error);
