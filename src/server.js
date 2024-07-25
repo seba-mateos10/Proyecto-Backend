@@ -15,6 +15,8 @@ const { initPassportGithub } = require("./config/passportConfig.js");
 const { errorHandling } = require("./middleware/errorHandling.js");
 const { addLogger, logger } = require("./utils/logger.js");
 require("dotenv");
+const swaggerUiExpress = require("swagger-ui-express");
+const { specs } = require("./utils/swaggerJsDoc.js");
 
 const viewRouter = require("./router/viewsRouter.js");
 const userRouter = require("./router/userRouter.js");
@@ -80,6 +82,7 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/tickets", ticketRouter);
 app.use("/mocking", mockingRouter);
 app.use("/myProfile", myProfileRouter);
+app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 app.use(errorHandling);
 
 exports.startServer = () =>
