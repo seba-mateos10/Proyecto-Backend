@@ -4,7 +4,6 @@ const { validPassword, creaHash } = require("../utils/bcryptHash.js");
 const { generateToken, generateTokenUrl } = require("../utils/jsonWebToken.js");
 const transport = require("../utils/nodeMailer.js");
 const { logger } = require("../utils/logger.js");
-
 class SessionController {
   register = async (req, res) => {
     try {
@@ -56,6 +55,7 @@ class SessionController {
     try {
       const { email, password } = req.body;
       const user = await userService.getUser({ email });
+      let Accesstoken = generateToken(user);
 
       //Validacion de campos vacios
       if (email === "" || password === "")
@@ -76,10 +76,13 @@ class SessionController {
         user.role = "admin";
       }
 
-      let Accesstoken = generateToken(user);
       req.user = user;
 
-      req.user.role
+      req.user.role;
+      (await userService.updateUser(
+        { _id: user._id },
+        { lastConnection: Date() }
+      ))
         ? res
             .status(200)
             .cookie("CoderCookieToken", Accesstoken, {
@@ -87,7 +90,12 @@ class SessionController {
               httpOnly: true,
             })
             .redirect("/api/products")
-        : res.status(404).send({ status: "Error" });
+        : res
+            .status(404)
+            .send({
+              status: "Error",
+              message: "There was an error when logging in",
+            });
     } catch (error) {
       console.log(error);
       res.status(400).send(error);
@@ -119,11 +127,11 @@ class SessionController {
           to: user.email,
           subject: "Change of password",
           html: `<div>
-                            <h1>
-                                Go to this link to change the password
-                            </h1>
-                            <a href="http://localhost:8080/login/change-of-password"> Change of password </a>
-                      </div>`,
+                                <h1>
+                                    Go to this link to change the password
+                                </h1>
+                                <a href="http://localhost:8080/login/change-of-password"> Change of password </a>
+                          </div>`,
         });
         res.cookie("CoderCookieToken", urlToken, {
           maxAge: 60 * 60 * 100,
@@ -206,7 +214,15 @@ class SessionController {
   };
 
   logout = async (req, res) => {
-    res.clearCookie("CoderCookieToken").redirect("/login");
+    try {
+      await userService.updateUser(
+        { _id: req.user._id },
+        { lastConnection: Date() }
+      );
+      res.clearCookie("CoderCookieToken").redirect("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
 

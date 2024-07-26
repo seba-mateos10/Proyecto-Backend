@@ -20,10 +20,16 @@ router.get(
   userController.getById
 );
 
+router.post(
+  "/:uid/documents",
+  passportCall("jwt"),
+  userController.uploadDocuments
+);
+
 router.put(
   "/:uid",
   passportCall("jwt"),
-  authorization(["admin", "premium"]),
+  authorization(["user", "premium", "admin"]),
   userController.updateOldUser
 );
 

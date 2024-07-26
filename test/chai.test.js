@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const ProductDao = require("../src/daos/mongoDb/productDaoMongo.js");
 const chai = require("chai");
+require("dotenv").config();
 
-mongoose.connect(
-  "mongodb+srv://sebitamateos1080:EdQz5XRClkLkwVo7@sebamateos.y8yajgz.mongodb.net/"
-);
+mongoose.connect(process.env.KEY_SECRET_TESTING);
 const expect = chai.expect;
 
 describe("testing productDao en chai", () => {

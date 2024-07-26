@@ -47,10 +47,12 @@ class CartController {
       const result = await cartService.createCart();
 
       result
-        ? res.status(200).send({
-            status: "The cart was created successfully",
-            payload: result,
-          })
+        ? res
+            .status(200)
+            .send({
+              status: "The cart was created successfully",
+              payload: result,
+            })
         : res
             .status(404)
             .send({ status: "Error", message: "There's been a problem" });
@@ -62,7 +64,6 @@ class CartController {
   addProduct = async (req, res) => {
     try {
       let { cid, pid } = req.params;
-
       const cart = await cartService.getCartByID(cid);
       const product = await productService.getProduct({ _id: pid });
 
@@ -189,12 +190,12 @@ class CartController {
           to: req.user.email,
           subject: "Thanks for your purchase",
           html: `<div>
-                                <h1>
-                                    Thanks for your purchase.
-                                    the total to pay is ${totalPrice}$
-                                </h1>
-                                <img src="cid:gracias-por-comprar">
-                          </div>`,
+                              <h1>
+                                  Thanks for your purchase.
+                                  the total to pay is ${totalPrice}$
+                              </h1>
+                              <img src="cid:gracias-por-comprar">
+                        </div>`,
           attachments: [
             {
               filename: "gracias-por-comprar.jpg",

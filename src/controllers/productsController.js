@@ -69,7 +69,6 @@ class ProductController {
             thumbnails,
             stock,
             code,
-            owener,
           }),
           message: "Error trying to create product",
           code: typeErrors.INVALID_TYPE_ERROR,
@@ -99,14 +98,17 @@ class ProductController {
         price,
         thumbnails,
         code,
-        stock
+        stock,
+        owener
       );
 
       result
-        ? res.status(200).send({
-            status: "A product has been created successfully",
-            payload: result,
-          })
+        ? res
+            .status(200)
+            .send({
+              status: "A product has been created successfully",
+              payload: result,
+            })
         : res
             .status(404)
             .send({ status: "Error", error: "Something went wrong" });
@@ -119,7 +121,6 @@ class ProductController {
     try {
       let { pid } = req.params;
       let updateBody = req.body;
-
       const product = await productService.getProduct({ _id: pid });
 
       if (!product)
@@ -127,7 +128,6 @@ class ProductController {
 
       const updateProduct = async (pid, updateBody) => {
         await productService.updateProduct(pid, updateBody);
-
         res.status(200).send({
           status: "Updated product",
           message: `The product was updated ${product.title}`,
@@ -167,6 +167,7 @@ class ProductController {
           message: `Product ${product.title} is removed successfully`,
         });
       };
+
       if (req.user.role == "premium") {
         req.user.email !== product.owener
           ? res.status(403).send({

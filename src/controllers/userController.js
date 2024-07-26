@@ -1,4 +1,5 @@
 const { userService, cartService } = require("../service/services.js");
+const { logger } = require("../utils/logger.js");
 const { sendSms } = require("../utils/twilioMessage.js");
 
 class UserController {
@@ -31,6 +32,14 @@ class UserController {
     } catch (error) {
       console.log(error);
       return res.status(411).send(error);
+    }
+  };
+
+  uploadDocuments = async (req, res) => {
+    try {
+      res.send("Hola mundo");
+    } catch (error) {
+      console.log(error);
     }
   };
 
