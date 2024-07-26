@@ -23,6 +23,8 @@ router.get(
 router.post(
   "/:uid/documents",
   passportCall("jwt"),
+  authorization(["user", "premium"]),
+  uploader.any(),
   userController.uploadDocuments
 );
 

@@ -37,7 +37,36 @@ class UserController {
 
   uploadDocuments = async (req, res) => {
     try {
-      res.send("Hola mundo");
+      const { uid } = req.params;
+      const user = await userService.getUser({ _id: uid });
+      const files = req.files;
+
+      if (files) {
+        files.forEach(async (file) => {
+          await userService.updateUser(
+            { _id: uid },
+            {
+              $addToSet: {
+                documents: {
+                  name: file.filename,
+                  reference: file.destination,
+                  docType: file.fieldname,
+                },
+              },
+            }
+          );
+        });
+        return res.status(201).send({
+          status: "success",
+          message: `${user.firtsName} the ${files.map(
+            (file) => file.fieldname
+          )} files were uploaded successfully`,
+        });
+      } else {
+        return res
+          .status(400)
+          .send({ status: "error", message: "error trying to upload files" });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +96,43 @@ class UserController {
     }
   };
 
+  changeOfRole = async (req, res) => {
+    try {
+      let { uid } = req.params;
+      let user = await userService.getUser({ _id: uid });
+      const requiredDocs = user.documents.some((doc) =>
+        doc.docType.includes("identity" && "myAddress" && "myAccount")
+      );
+
+      if (!user) return logger.error("User not found");
+
+      if (requiredDocs) {
+        switch (user.role) {
+          case "user":
+            await userService.updateUser({ _id: uid }, { role: "premium" });
+            return res.send({
+              status: "success",
+              message: "You are now a premium user",
+            });
+          case "premium":
+            await userService.updateUser({ _id: uid }, { role: "user" });
+            return res.send({
+              status: "success",
+              message: "Now you are a common user",
+            });
+        }
+      } else {
+        return res
+          .status(403)
+          .send({
+            status: "error",
+            message: "you need to upload documents to be premium",
+          });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   deleteByUser = async (req, res) => {
     try {
       let { uid } = req.params;

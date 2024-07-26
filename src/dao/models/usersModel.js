@@ -40,6 +40,8 @@ const userSchema = new Schema({
     {
       name: String,
       reference: String,
+      docType: String,
+      _id: false,
     },
   ],
   lastConnection: {
