@@ -92,4 +92,4 @@ exports.startServer = () =>
     logger.info(`Running in the port: ${PORT}`);
   });
 
-// socketProducts(socketServer)
+socketProducts(socketServer);
