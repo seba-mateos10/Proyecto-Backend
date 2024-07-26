@@ -17,8 +17,7 @@ paths:
                   $ref: "#components/schemas/Carts"
         "500":
           description: Internal Server Error
-
- post:
+    post:
       summary: Create cart
       tags:
         - Carts
@@ -29,23 +28,23 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#components/schemas/Carts"
+                $ref: "#components/schemas/Carts"
         "500":
           description: Internal Server Error
   /api/carts/{cid}:
     get:
-      summary : Search by id the cart
-      tags: 
+      summary: Search by id the cart
+      tags:
         - Carts
       security:
         - cookieAuth: []
       parameters:
-      - name: cid
-        in: path
-        required: true
-        description: Cart id to request
-        schema:
-          $type: String
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to request
+          schema:
+            $type: String
       responses:
         "200":
           description: cart found successfully
@@ -62,12 +61,12 @@ paths:
       security:
         - cookieAuth: []
       parameters:
-      - name: cid
-        in: path
-        required: true
-        description: Cart id to request
-        schema:
-          $type: String
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to request
+          schema:
+            $type: String
       responses:
         "200":
           description: All products were removed from the cart
@@ -81,18 +80,18 @@ paths:
       security:
         - cookieAuth: []
       parameters:
-      - name: cid
-        in: path
-        required: true
-        description: Cart id to request
-        schema:
-          $type: String
-      - name: pid
-        in: path
-        required: true
-        description: Id of the product to request
-        schema:
-          $type: String
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to request
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: Id of the product to request
+          schema:
+            $type: String
       responses:
         "200":
           description: A `product` was added to the cart
@@ -105,18 +104,18 @@ paths:
       security:
         - cookieAuth: []
       parameters:
-      - name: cid
-        in: path
-        required: true
-        description: Cart id to request
-        schema:
-          $type: String
-      - name: pid
-        in: path
-        required: true
-        description: Id of the product to request
-        schema:
-          $type: String
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to request
+          schema:
+            $type: String
+        - name: pid
+          in: path
+          required: true
+          description: Id of the product to request
+          schema:
+            $type: String
       responses:
         "200":
           description: A product was deleted successfully
@@ -127,15 +126,15 @@ paths:
       summary: Purchase ticket is generated
       tags:
         - Carts
-      security: 
+      security:
         - cookieAuth: []
       parameters:
-      - name: cid
-        in: path
-        required: true
-        description: Cart id to request
-        schema:
-          $type: String
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to request
+          schema:
+            $type: String
       responses:
         "200":
           description: Your ticket was generated correctly

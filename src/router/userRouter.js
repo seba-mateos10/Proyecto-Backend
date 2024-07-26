@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { UserController } = require("../controllers/userController.js");
 const { passportCall } = require("../passportJwt/passportCall");
 const { authorization } = require("../passportJwt/authorization");
+const uploader = require("uploader");
 
 const router = Router();
 const userController = new UserController();
