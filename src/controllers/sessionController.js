@@ -208,7 +208,7 @@ class SessionController {
         maxAge: 60 * 60 * 100,
         httpOnly: true,
       })
-      .redirect("/api/productos");
+      .redirect("/api/products");
   };
 
   logout = async (req, res) => {
