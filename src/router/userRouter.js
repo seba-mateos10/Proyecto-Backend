@@ -49,4 +49,11 @@ router.delete(
   userController.deleteByUser
 );
 
+router.delete(
+  "/",
+  passportCall("jwt"),
+  authorization(["admin"]),
+  userController.deleteInactiveUsers
+);
+
 module.exports = router;
