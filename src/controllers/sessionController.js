@@ -3,7 +3,7 @@ const { userService, contactService } = require("../service/services.js");
 const { validPassword, creaHash } = require("../utils/bcryptHash.js");
 const { generateToken, generateTokenUrl } = require("../utils/jsonWebToken.js");
 const transport = require("../utils/nodeMailer.js");
-const { logger } = require("../utils/logger.js");
+
 class SessionController {
   register = async (req, res) => {
     try {
@@ -73,7 +73,7 @@ class SessionController {
         email === process.env.ADMIN_EMAIL &&
         password === process.env.ADMIN_PASSWORD
       ) {
-        user.role = "admin";
+        await userService.updateUser({ _id: user._id }, { role: "admin" });
       }
 
       req.user = user;
@@ -90,12 +90,10 @@ class SessionController {
               httpOnly: true,
             })
             .redirect("/api/products")
-        : res
-            .status(404)
-            .send({
-              status: "Error",
-              message: "There was an error when logging in",
-            });
+        : res.status(404).send({
+            status: "Error",
+            message: "There was an error when logging in",
+          });
     } catch (error) {
       console.log(error);
       res.status(400).send(error);
