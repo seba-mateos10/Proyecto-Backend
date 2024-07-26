@@ -2,7 +2,7 @@ const { Router } = require("express");
 const { UserController } = require("../controllers/userController.js");
 const { passportCall } = require("../passportJwt/passportCall");
 const { authorization } = require("../passportJwt/authorization");
-const uploader = require("uploader");
+const multer = require("multer");
 
 const router = Router();
 const userController = new UserController();
@@ -20,6 +20,17 @@ router.get(
   authorization(["admin"]),
   userController.getById
 );
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const uploader = multer({ storage });
 
 router.post(
   "/:uid/documents",
