@@ -5,19 +5,26 @@ const { sendSms } = require("../utils/twilioMessage.js");
 class UserController {
   getAllUsers = async (req, res) => {
     try {
-      const users = await userService.getUsers();
+      const usersDb = await userService.getUsers();
+      const users = usersDb.map(({ firtsName, email, role }) => ({
+        firtsName,
+        email,
+        role,
+      }));
 
-      if (users) {
-        res.status(200).send({
-          status: "information was successfully extracted from the database",
-          payload: users,
-        });
-      } else {
-        throw { status: "Error", message: "No user data found" };
-      }
+      users
+        ? res
+            .status(200)
+            .send({
+              status:
+                "information was successfully extracted from the database",
+              payload: users,
+            })
+        : res
+            .status(500)
+            .send({ status: "Error", message: "No user data found" });
     } catch (error) {
       console.log(error);
-      return res.status(500).send(error);
     }
   };
 
@@ -122,12 +129,10 @@ class UserController {
             });
         }
       } else {
-        return res
-          .status(403)
-          .send({
-            status: "error",
-            message: "you need to upload documents to be premium",
-          });
+        return res.status(403).send({
+          status: "error",
+          message: "you need to upload documents to be premium",
+        });
       }
     } catch (error) {
       console.log(error);
