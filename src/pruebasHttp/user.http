@@ -1,13 +1,51 @@
+## Trae todos los usuarios
+GET http://localhost:8080/api/users
+### Busca un usuario por id
+GET http://localhost:8080/api/users/2
+### Busca un usuario por id
+GET http://localhost:8080/api/users/649131d6676f635b194f83e4
 ### register
 POST http://localhost:8080/api/users
 Content-Type: application/json
-
 {
-    "firtsName": "seba",
-    "lastName": "mateos",
-    "email": "sebamateos@gmail.com",
-    "userName": "seba123",
-    "birthDate": "27-08-1998",
-    "password": "seba1234"
+    "firtsName": "pablo",
+    "lastName": "maguirre",
+    "email": "maguirrepablo@hotmail.comm",
+    "userName": "macpabloo",
+    "birthDate": "1996-08-15",
+    "password": "macpabli"
 }
+### register
+POST http://localhost:8080/api/users
+Content-Type: application/json
+{
+    "firtsName": "peter",
+    "lastName": "aguirre",
+    "email": "aguirrePeter@gmail.com",
+    "userName": "peterAG",
+    "birthDate": "1996-08-15",
+    "password": "peter"
+}
+### modifica un usuario
+PUT http://localhost:8080/api/users/649131d6676f635b194f83e4
+Content-Type: application/json
+{
+    "userName": "PedroOG"
+}
+### modifica un usuario
+PUT http://localhost:8080/api/users/1
+Content-Type: application/json
+{
+    "firtsName": "pedro ezequiel",
+    "email": "peterSanchez@gmail.com"
+}
+### modifica el rol del usuario
+PUT http://localhost:8080/api/users/premium/64910d7803c427a0d5e1a839
+### Borra un usuarios
+DELETE http://localhost:8080/api/users/64a892c287609a604619b495
 
+### Borra un usuarios
+DELETE http://localhost:8080/api/users/2
+
+### Borra usuarios inactivos
+DELETE http://localhost:8080/api/users
