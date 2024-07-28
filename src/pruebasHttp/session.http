@@ -1,0 +1,31 @@
+### register
+POST http://localhost:8080/api/session/register
+Content-Type: application/json
+
+### register
+POST http://localhost:8080/api/session/register
+Content-Type: application/json
+
+### login
+post http://localhost:8080/api/session/login
+Content-Type: application/json
+
+### login
+post http://localhost:8080/api/session/login
+Content-Type: application/json
+
+### login
+post http://localhost:8080/api/session/login
+Content-Type: application/json
+
+### login
+post http://localhost:8080/api/session/recover-password
+
+### acceder al current
+GET http://localhost:8080/api/session/current
+
+### privada
+GET http://localhost:8080/api/session/privada
+
+### logout
+GET http://localhost:8080/api/session/logout

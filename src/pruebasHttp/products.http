@@ -1,0 +1,76 @@
+### Trae todos los productos en la base de datos
+GET http://localhost:8080/api/products
+# Content-Type: application/json
+# authorization: Bearer 
+
+### busca producto por id
+GET http://localhost:8080/api/products/649e1b939320ec15b2b39aee
+
+### busca producto por id
+GET http://localhost:8080/api/products/7
+
+### agrega un producto 
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+
+### agrega un producto 
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+
+### agrega un producto 
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+
+### agrega un producto 
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+    "title": "prod Prueba",
+    "description": "modelo: 2020",
+    "price": "7.633",
+    "thumbnails": "Producto",
+    "stock": "50"
+}
+
+### actualiza un producto existente
+PUT http://localhost:8080/api/products/64c3060a2fd5c54432ab63f3
+Content-Type: application/json
+
+{
+    "description": "Modelo: 2022",
+    "price": "15.999",
+    "stock": "40"
+}
+
+### actualiza un producto existente
+PUT http://localhost:8080/api/products/64c306b42fd5c54432ab63f9
+Content-Type: application/json
+
+{
+    "description": "Modelo: 2021",
+    "price": "16.999",
+    "stock": "15"
+}
+
+### actualiza un producto
+PUT http://localhost:8080/api/products/1
+Content-Type: application/json
+
+{
+    "description": "Modelo: 2022",
+    "price": 20.999,
+    "stock": 10
+}
+
+### elimina un producto
+DELETE http://localhost:8080/api/products/64c1c60d44135f78e5e72024
+
+### elimina un producto
+DELETE http://localhost:8080/api/products/64c30358abaf3f4455bfc4a8
+
+### elimina un producto
+DELETE http://localhost:8080/api/products/5
