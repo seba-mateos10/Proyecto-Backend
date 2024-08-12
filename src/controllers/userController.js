@@ -9,20 +9,25 @@ class UserController {
   getAllUsers = async (req, res) => {
     try {
       const usersDb = await userService.getUsers();
-      const users = usersDb.map(({ firtsName, email, role }) => ({
-        firtsName,
-        email,
-        role,
-      }));
+      const users = usersDb.map(
+        ({ _id, firtsName, lastName, email, role, lastConnection }) => ({
+          _id,
+          firtsName,
+          lastName,
+          email,
+          role,
+          lastConnection,
+        })
+      );
 
-      users
-        ? res.status(200).send({
-            status: "information was successfully extracted from the database",
-            payload: users,
-          })
-        : res
-            .status(500)
-            .send({ status: "Error", message: "No user data found" });
+      res.render("usersPanel", {
+        title: "Users Panel",
+        style: "usersPanel.css",
+        users,
+      });
+      // users
+      // ? res.status(200).send({ status:"information was successfully extracted from the database", payload: users })
+      // : res.status(500).send({ status:"Error", message: "No user data found" })
     } catch (error) {
       console.log(error);
     }
