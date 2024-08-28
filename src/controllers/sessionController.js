@@ -61,7 +61,6 @@ class SessionController {
     try {
       const { email, password } = req.body;
       const user = await userService.getUser({ email });
-      let Accesstoken = generateToken(user);
 
       //Validacion de campos vacios
       if (email === "" || password === "")
@@ -89,6 +88,8 @@ class SessionController {
       ) {
         await userService.updateUser({ _id: user._id }, { role: "admin" });
       }
+
+      let Accesstoken = generateToken(user);
 
       req.user = user;
 
