@@ -114,10 +114,12 @@ class ProductController {
       );
 
       result
-        ? res.status(200).send({
-            status: "A product has been created successfully",
-            payload: result,
-          })
+        ? res
+            .status(200)
+            .send({
+              status: "A product has been created successfully",
+              payload: result,
+            })
         : res
             .status(404)
             .send({ status: "Error", error: "Something went wrong" });
@@ -167,12 +169,10 @@ class ProductController {
       let product = await productService.getProduct({ _id: pid });
 
       if (!product)
-        return res
-          .status(404)
-          .send({
-            status: "Error",
-            message: "The product to delete was not found",
-          });
+        return res.status(404).send({
+          status: "Error",
+          message: "The product to delete was not found",
+        });
 
       const removeProduct = async (pid) => {
         await productService.deleteProduct(pid);
