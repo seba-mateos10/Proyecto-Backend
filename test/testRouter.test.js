@@ -152,7 +152,7 @@ describe("Router testing", () => {
       expect(ok).to.be.false;
     });
     it("Endpoint PUT: Update a product successfully", async () => {
-      let pid = "64c3060a2fd5c54432ab63f3";
+      let pid = "65025a067a2094c819be2a1e";
       let updateBody = {
         title: "Test product 2",
         description: "this product will be used for testing 2",
