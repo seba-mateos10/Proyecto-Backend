@@ -110,7 +110,7 @@ class SessionController {
             message: "There was an error when logging in",
           });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
