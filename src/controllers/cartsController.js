@@ -47,12 +47,10 @@ class CartController {
       const result = await cartService.createCart();
 
       result
-        ? res
-            .status(200)
-            .send({
-              status: "The cart was created successfully",
-              payload: result,
-            })
+        ? res.status(200).send({
+            status: "The cart was created successfully",
+            payload: result,
+          })
         : res
             .status(404)
             .send({ status: "Error", message: "There's been a problem" });
@@ -68,21 +66,28 @@ class CartController {
       const product = await productService.getProduct({ _id: pid });
 
       if (product.owener === req.user.email)
-        throw {
+        return res.status(404).send({
           status: "Error",
           message: "You can't add your products to your cart",
-        };
+        });
 
       if (!product)
-        throw { status: "Error", message: "The product does not exist" };
+        return res.status(404).send({
+          status: "Error",
+          message: "The product does not exist",
+        });
 
-      if (!cart) throw { status: "Error", message: "The cart does not exist" };
+      if (!cart)
+        return res.status(404).send({
+          status: "Error",
+          message: "The cart does not exist",
+        });
 
       if (product.stock < 1)
-        throw {
+        return res.status(404).send({
           status: "Error",
           message: "The product does not have enough stock",
-        };
+        });
 
       if (cart && product) {
         await cartService.addProductAndUpdate(cid, pid);
@@ -93,7 +98,7 @@ class CartController {
         });
       }
     } catch (error) {
-      res.status(404).send(error);
+      console.log(error);
     }
   };
 
@@ -110,7 +115,7 @@ class CartController {
       } else {
         res.status(200).send({
           status: "success",
-          message: "cart was deleted successfully",
+          message: "the product is removed from the cart",
           payload: cart,
         });
       }
@@ -205,7 +210,7 @@ class CartController {
           ],
         });
 
-        res.send({
+        return res.send({
           status: "Success",
           message: "Successful purchase",
           toTicket: ticket,
