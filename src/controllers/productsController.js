@@ -5,6 +5,7 @@ const { typeErrors } = require("../customErrors/typeErrors.js");
 const { generateInfoProductError } = require("../customErrors/info.js");
 const objectConfig = require("../config/objectConfig.js");
 const transport = require("../utils/nodeMailer.js");
+const { logger } = require("../utils/logger.js");
 
 class ProductController {
   getProductsAll = async (req, res) => {
@@ -17,9 +18,14 @@ class ProductController {
         products;
 
       if (page > totalPages || page < 1)
-        throw { status: "Error", message: "Page not found" };
+        return res
+          .status(404)
+          .send({ status: "Error", message: "Page not found" });
 
-      if (!products) throw { status: "Error", message: "Documents not found" };
+      if (!products)
+        return res
+          .status(404)
+          .send({ status: "Error", message: "Documents not found" });
 
       res.render("home", {
         title: "Home",
@@ -34,7 +40,7 @@ class ProductController {
         user: req.user,
       });
     } catch (error) {
-      res.status(404).send(error);
+      logger.error(error);
     }
   };
 
@@ -43,14 +49,17 @@ class ProductController {
       let { pid } = req.params;
       let product = await productService.getProduct({ _id: pid });
 
-      if (!product) throw { status: "Error", message: "Product not found" };
+      if (!product)
+        return res
+          .status(404)
+          .send({ status: "Error", message: "Product not found" });
 
       res.status(200).send({
         status: "The product has been found successfully",
         payload: product,
       });
     } catch (error) {
-      res.status(404).send(error);
+      logger.error(error);
     }
   };
 
@@ -114,6 +123,7 @@ class ProductController {
             .send({ status: "Error", error: "Something went wrong" });
     } catch (error) {
       next(error);
+      logger.error(error);
     }
   };
 
@@ -124,7 +134,9 @@ class ProductController {
       const product = await productService.getProduct({ _id: pid });
 
       if (!product)
-        throw { status: "Error", message: "The product does not exist" };
+        return res
+          .status(404)
+          .send({ status: "Error", message: "The product does not exist" });
 
       const updateProduct = async (pid, updateBody) => {
         await productService.updateProduct(pid, updateBody);
@@ -145,7 +157,7 @@ class ProductController {
         updateProduct(pid, updateBody);
       }
     } catch (error) {
-      res.status(404).send(error);
+      logger.error(error);
     }
   };
 
@@ -155,10 +167,12 @@ class ProductController {
       let product = await productService.getProduct({ _id: pid });
 
       if (!product)
-        throw {
-          status: "Error",
-          message: "The product to delete was not found",
-        };
+        return res
+          .status(404)
+          .send({
+            status: "Error",
+            message: "The product to delete was not found",
+          });
 
       const removeProduct = async (pid) => {
         await productService.deleteProduct(pid);
@@ -189,7 +203,7 @@ class ProductController {
           }));
       }
     } catch (error) {
-      res.send(error);
+      logger.error(error);
     }
   };
 }

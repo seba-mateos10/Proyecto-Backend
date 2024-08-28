@@ -1,11 +1,12 @@
 const { ticketModel } = require("../models/ticketModel.js");
+const { logger } = require("../../utils/logger.js");
 
 class TicketDaoMongo {
   async create(ticket) {
     try {
       return await ticketModel.create(ticket);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -13,7 +14,7 @@ class TicketDaoMongo {
     try {
       return await ticketModel.find();
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -21,7 +22,7 @@ class TicketDaoMongo {
     try {
       return await ticketModel.findById(id);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 }

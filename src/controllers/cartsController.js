@@ -6,6 +6,7 @@ const {
 const { v4: uuidv4 } = require("uuid");
 const transport = require("../utils/nodeMailer.js");
 const objectConfig = require("../config/objectConfig.js");
+const { logger } = require("../utils/logger.js");
 
 class CartController {
   getCarts = async (req, res) => {
@@ -17,7 +18,7 @@ class CartController {
         payload: carts,
       });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -38,7 +39,7 @@ class CartController {
 
       res.render("cartById", cartObj);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -55,7 +56,7 @@ class CartController {
             .status(404)
             .send({ status: "Error", message: "There's been a problem" });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -98,7 +99,7 @@ class CartController {
         });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -120,7 +121,7 @@ class CartController {
         });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -140,7 +141,7 @@ class CartController {
         payload: cart,
       });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -151,7 +152,10 @@ class CartController {
       const insufficientStock = [];
       const buyProducts = [];
 
-      if (!cart) throw { status: "Error", message: "Cart not found" };
+      if (!cart)
+        return res
+          .status(404)
+          .send({ status: "Error", message: "Cart not found" });
 
       cart.products.forEach(async (item) => {
         const product = item.product;
@@ -176,11 +180,11 @@ class CartController {
         .toFixed(3);
 
       if (!buyProducts.length) {
-        throw {
+        return res.status(404).send({
           status: "Error",
           message: "Insufficient stock in the products",
           products: insufficientStock.map((prod) => prod.title),
-        };
+        });
       }
 
       if (buyProducts.length > 0) {
@@ -217,8 +221,7 @@ class CartController {
         });
       }
     } catch (error) {
-      console.log(error);
-      res.status(404).send(error);
+      logger.error(error);
     }
   };
 }

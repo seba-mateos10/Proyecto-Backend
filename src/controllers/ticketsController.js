@@ -1,4 +1,5 @@
 const { ticketService } = require("../service/services");
+const { logger } = require("../utils/logger.js");
 
 class TicketController {
   getTickets = async (req, res) => {
@@ -11,19 +12,23 @@ class TicketController {
             .status(501)
             .send({ status: "Error", message: "No users tickets found" });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
   getTicket = async (req, res) => {
-    const { tid } = req.params;
-    const ticket = await ticketService.getTicket(tid);
+    try {
+      const { tid } = req.params;
+      const ticket = await ticketService.getTicket(tid);
 
-    ticket
-      ? res.status(200).send({ status: "success", toTicketIs: ticket })
-      : res
-          .status(404)
-          .send({ status: "Error", message: "Your ticket does not exist" });
+      ticket
+        ? res.status(200).send({ status: "success", toTicketIs: ticket })
+        : res
+            .status(404)
+            .send({ status: "Error", message: "Your ticket does not exist" });
+    } catch (error) {
+      logger.error(error);
+    }
   };
 }
 

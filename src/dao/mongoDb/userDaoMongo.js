@@ -1,6 +1,7 @@
 const { userModel } = require("../models/usersModel.js");
-const CartDaoMongo = require("./cartDaoMongo.js");
 const cart = new CartDaoMongo();
+const { logger } = require("../../utils/logger.js");
+const CartDaoMongo = require("./cartDaoMongo.js");
 
 class UserDaoMongo {
   async create({ firtsName, lastName, userName, email, birthDate, password }) {
@@ -15,7 +16,7 @@ class UserDaoMongo {
         cart: await cart.create(),
       });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -23,7 +24,7 @@ class UserDaoMongo {
     try {
       return await userModel.findOne({ ...userData });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -31,16 +32,24 @@ class UserDaoMongo {
     try {
       return await userModel.find();
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
   async update(id, updateBody) {
-    return await userModel.updateOne({ _id: id }, updateBody);
+    try {
+      return await userModel.updateOne({ _id: id }, updateBody);
+    } catch (error) {
+      logger.error(error);
+    }
   }
 
   async delete(id) {
-    return await userModel.deleteOne({ _id: id });
+    try {
+      return await userModel.deleteOne({ _id: id });
+    } catch (error) {
+      logger.error(error);
+    }
   }
 }
 

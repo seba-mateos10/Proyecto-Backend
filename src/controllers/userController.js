@@ -21,7 +21,7 @@ class UserController {
       // ? res.status(200).send({ status:"information was successfully extracted from the database", payload: users })
       // : res.status(500).send({ status:"Error", message: "No user data found" })
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -34,7 +34,7 @@ class UserController {
         ? res.send({ status: "error", message: "User not available" })
         : res.send({ status: "the user was found", payload: user });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -71,7 +71,7 @@ class UserController {
           .send({ status: "error", message: "error trying to upload files" });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -97,7 +97,7 @@ class UserController {
             message: "Could not update user data",
           });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 
@@ -130,7 +130,7 @@ class UserController {
         });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
   deleteByUser = async (req, res) => {
@@ -144,10 +144,12 @@ class UserController {
 
         res.send({ status: "success", payload: user });
       } else {
-        throw { status: "error", message: "could not delete user" };
+        res
+          .status(400)
+          .send({ status: "error", message: "could not delete user" });
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(400).send(error);
     }
   };
@@ -186,7 +188,7 @@ class UserController {
           })
         : res.send({ status: "error", message: "There was a server error" });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
 }
