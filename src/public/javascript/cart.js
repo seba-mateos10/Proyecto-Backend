@@ -31,13 +31,19 @@ const deteleAll = async (id) => {
   });
 
   const responseJson = await response.json();
+  const ticket = responseJson.toTicket;
 
   response.ok
     ? Swal.fire({
-        icon: "success",
         title: responseJson.message,
-        showConfirmButton: false,
-        timer: 1500,
+        icon: "success",
+        html: `            
+        <div>
+            <b>date of purchase : ${ticket.purchaseDatetime} </b>
+            <b>amount: ${ticket.amount} </b>
+        </div>`,
+        showCloseButton: true,
+        showCancelButton: true,
       }) &&
       setTimeout(() => {
         location.reload();
