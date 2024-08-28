@@ -109,7 +109,7 @@ class SessionController {
             message: "There was an error when logging in",
           });
     } catch (error) {
-      logger.error(error);
+      console.log(error);
     }
   };
 
@@ -202,12 +202,10 @@ class SessionController {
 
       contact
         ? res.status(200).send({ status: "success", toInfo: contact })
-        : res
-            .status(404)
-            .send({
-              status: "Error",
-              message: "Your information does not exist",
-            });
+        : res.status(404).send({
+            status: "Error",
+            message: "Your information does not exist",
+          });
     } catch (error) {
       logger.error(error);
     }
