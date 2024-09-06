@@ -77,16 +77,18 @@ class SessionController {
         });
 
       //Validacion si no existe el email
-      if (!user)
+      if (!user) {
         return res
           .status(400)
           .send({ status: "error", message: "Invalid email" });
+      }
 
       //Validacion si existe o no el password
-      if (!validPassword(password, user))
+      if (!validPassword(password, user)) {
         return res
           .status(400)
           .send({ status: "error", message: "Invalid password" });
+      }
 
       //Validacion de usuario ADMIN
       if (
@@ -97,25 +99,29 @@ class SessionController {
       }
 
       let Accesstoken = generateToken(user);
-
       req.user = user;
 
-      req.user.role;
-      (await userService.updateUser(
-        { _id: user._id },
-        { lastConnection: Date() }
-      ))
-        ? res
+      req.user.role
+        ? (await userService.updateUser(
+            { _id: user._id },
+            { lastConnection: Date() }
+          )) &&
+          res
             .status(200)
             .cookie("CoderCookieToken", Accesstoken, {
               maxAge: 60 * 60 * 1000,
               httpOnly: true,
             })
-            .redirect("/api/products")
-        : res.status(404).send({
-            status: "Error",
-            message: "There was an error when logging in",
-          });
+            .send({
+              status: "success",
+              message: `${user.firtsName} you have logged in successfully`,
+            })
+        : res
+            .status(404)
+            .send({
+              status: "Error",
+              message: "There was an error when logging in",
+            });
     } catch (error) {
       logger.error(error);
     }
@@ -133,10 +139,12 @@ class SessionController {
       const user = await userService.getUser({ email });
 
       if (!user) {
-        return res.status(502).send({
-          status: "Error",
-          message: "The user could not be found in the database",
-        });
+        return res
+          .status(502)
+          .send({
+            status: "Error",
+            message: "The user could not be found in the database",
+          });
       }
 
       if (user) {
@@ -156,10 +164,12 @@ class SessionController {
           maxAge: 60 * 60 * 100,
           httpOnly: true,
         });
-        return res.status(200).send({
-          status: "Success",
-          message: "An email was sent to verify your identity",
-        });
+        return res
+          .status(200)
+          .send({
+            status: "Success",
+            message: "An email was sent to verify your identity",
+          });
       }
     } catch (error) {
       logger.error(error);
@@ -210,10 +220,12 @@ class SessionController {
 
       contact
         ? res.status(200).send({ status: "success", toInfo: contact })
-        : res.status(404).send({
-            status: "Error",
-            message: "Your information does not exist",
-          });
+        : res
+            .status(404)
+            .send({
+              status: "Error",
+              message: "Your information does not exist",
+            });
     } catch (error) {
       logger.error(error);
     }
