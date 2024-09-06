@@ -13,31 +13,32 @@ class SessionController {
 
       //validacion si vienen los campos vacios
       if (
-        firtsName == "" ||
-        lastName == "" ||
-        email == "" ||
-        password == "" ||
-        userName == "" ||
-        birthDate == ""
+        !firtsName ||
+        !lastName ||
+        !email ||
+        !password ||
+        !userName ||
+        !birthDate
       ) {
-        res
+        return res
           .status(400)
           .send({ status: "error", message: "Fill in the missing fields" });
       }
       //valida si existe email
       if (await userService.getUser({ email })) {
-        res
+        return res
           .status(400)
           .send({ status: "Error", message: "This email is registered" });
       }
 
       //valida si existe el userName
       if (await userService.getUser({ userName })) {
-        res
+        return res
           .status(400)
           .send({ status: "Error", message: "Username is not available" });
       }
 
+      let Accesstoken = generateToken({ firtsName, lastName, email });
       const user = await userService.createUser({
         firtsName,
         lastName,
@@ -46,12 +47,18 @@ class SessionController {
         birthDate,
         password: creaHash(password),
       });
-      let Accesstoken = generateToken({ firtsName, lastName, email });
-      res.status(201).send({
-        status: "success",
-        message: `The user ${user.firtsName} ${user.lastName} registered successfully`,
-        Accesstoken,
-      });
+
+      user
+        ? res.status(201).send({
+            status: "success",
+            message: `The user ${user.firtsName} ${user.lastName} registered successfully`,
+            Accesstoken,
+          })
+        : res.status(500).send({
+            status: "error",
+            message:
+              "A problem occurred and the request could not be completed",
+          });
     } catch (error) {
       logger.error(error);
     }
