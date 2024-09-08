@@ -1,7 +1,7 @@
 const { userModel } = require("../models/usersModel.js");
-const cart = new CartDaoMongo();
 const { logger } = require("../../utils/logger.js");
 const CartDaoMongo = require("./cartDaoMongo.js");
+const cart = new CartDaoMongo();
 
 class UserDaoMongo {
   async create({ firtsName, lastName, userName, email, birthDate, password }) {
