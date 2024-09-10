@@ -9,7 +9,6 @@ dotenv.config({
 
 console.log(process.env.PERSISTENCE);
 module.exports = {
-  SECRET: process.env.SECRET,
   persistence: process.env.PERSISTENCE,
   port: process.env.PORT,
   JwtKeySecret: process.env.JWT_KEY_SECRET,

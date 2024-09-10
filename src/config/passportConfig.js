@@ -24,7 +24,6 @@ const initPassportGithub = () => {
               birthDate: profile._json.created_at,
               password: " ",
             });
-
             return done(null, result);
           }
 

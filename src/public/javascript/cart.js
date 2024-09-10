@@ -56,13 +56,13 @@ const purchase = async (id) => {
 
   response.ok
     ? Swal.fire({
-        icon: "success",
         title: responseJson.message,
+        icon: "success",
         html: `            
-          <div>
-              <b>date of purchase : ${ticket.purchaseDatetime} </b>
-              <b>amount: ${ticket.amount} </b>
-          </div>`,
+            <div>
+                <b>date of purchase : ${ticket.purchaseDatetime} </b>
+                <b>amount: ${ticket.amount} </b>
+            </div>`,
         showCloseButton: true,
         showCancelButton: true,
       }) &&

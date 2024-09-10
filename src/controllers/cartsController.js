@@ -48,10 +48,12 @@ class CartController {
       const result = await cartService.createCart();
 
       result
-        ? res.status(200).send({
-            status: "The cart was created successfully",
-            payload: result,
-          })
+        ? res
+            .status(200)
+            .send({
+              status: "The cart was created successfully",
+              payload: result,
+            })
         : res
             .status(404)
             .send({ status: "Error", message: "There's been a problem" });
