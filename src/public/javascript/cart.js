@@ -1,10 +1,7 @@
 const deleteProduct = async (product, cart) => {
-  const response = await fetch(
-    `http://localhost:8080/api/carts/${cart}/products/${product}`,
-    {
-      method: "DELETE",
-    }
-  );
+  const response = await fetch(`/api/carts/${cart}/products/${product}`, {
+    method: "DELETE",
+  });
 
   const responseJson = await response.json();
 
@@ -31,19 +28,13 @@ const deteleAll = async (id) => {
   });
 
   const responseJson = await response.json();
-  const ticket = responseJson.toTicket;
 
   response.ok
     ? Swal.fire({
-        title: responseJson.message,
         icon: "success",
-        html: `            
-        <div>
-            <b>date of purchase : ${ticket.purchaseDatetime} </b>
-            <b>amount: ${ticket.amount} </b>
-        </div>`,
-        showCloseButton: true,
-        showCancelButton: true,
+        title: responseJson.message,
+        showConfirmButton: false,
+        timer: 1500,
       }) &&
       setTimeout(() => {
         location.reload();
@@ -61,13 +52,19 @@ const purchase = async (id) => {
   });
 
   const responseJson = await response.json();
+  const ticket = responseJson.toTicket;
 
   response.ok
     ? Swal.fire({
         icon: "success",
         title: responseJson.message,
-        showConfirmButton: false,
-        timer: 1500,
+        html: `            
+          <div>
+              <b>date of purchase : ${ticket.purchaseDatetime} </b>
+              <b>amount: ${ticket.amount} </b>
+          </div>`,
+        showCloseButton: true,
+        showCancelButton: true,
       }) &&
       setTimeout(() => {
         location.reload();

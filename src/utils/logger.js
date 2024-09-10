@@ -31,7 +31,7 @@ switch (mode) {
           level: process.env.LEVEL_LOGGER,
           format: winston.format.combine(
             winston.format.simple(),
-            winston.format.colorize({ colors: customLevels.colors, all: true }),
+            // winston.format.colorize({ colors: customLevels.colors, all: true }),
             winston.format.printf((info) => `[${info.level}] ${info.message}`)
           ),
         }),
