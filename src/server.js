@@ -8,7 +8,6 @@ const cors = require("cors");
 const compression = require("express-compression");
 const { Server: ServerHTTP } = require("http");
 const { Server: ServerIO } = require("socket.io");
-const logger = require("morgan");
 
 const initPassport = require("./passportJwt/passportJwt.js");
 const { socketProducts } = require("./utils/socketProducts.js");
@@ -37,7 +36,6 @@ const PORT = process.env.PORT;
 
 // config de app
 app.use(express.urlencoded({ extended: true }));
-app.use(logger("dev"));
 app.use(express.json());
 app.use("/static", express.static(__dirname + "/public"));
 app.use(cors());
