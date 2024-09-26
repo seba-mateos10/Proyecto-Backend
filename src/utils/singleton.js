@@ -4,10 +4,7 @@ const { logger } = require("../utils/logger.js");
 class MongoSingleton {
   static #instance;
   constructor() {
-    connect(process.env.MONGO_KEY_SECRET, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    connect(process.env.MONGO_KEY_SECRET);
   }
   static getInstance() {
     if (this.#instance) {

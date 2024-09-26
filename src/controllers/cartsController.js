@@ -48,12 +48,10 @@ class CartController {
       const result = await cartService.createCart();
 
       result
-        ? res
-            .status(200)
-            .send({
-              status: "The cart was created successfully",
-              payload: result,
-            })
+        ? res.status(200).send({
+            status: "The cart was created successfully",
+            payload: result,
+          })
         : res
             .status(404)
             .send({ status: "Error", message: "There's been a problem" });
@@ -150,28 +148,49 @@ class CartController {
   cartPurchase = async (req, res) => {
     try {
       const { cid } = req.params;
+      console.log("Received cart ID:", cid); // Log para el ID del carrito
+
       const cart = await cartService.getCartByID(cid);
+      console.log("Cart retrieved:", cart); // Log para mostrar el carrito
+
       const insufficientStock = [];
       const buyProducts = [];
 
-      if (!cart)
+      if (!cart) {
+        console.log("Cart not found, returning 404"); // Log si no se encuentra el carrito
         return res
           .status(404)
           .send({ status: "Error", message: "Cart not found" });
+      }
 
-      cart.products.forEach(async (item) => {
+      // Cambiar el forEach a un bucle for para usar await correctamente
+      for (const item of cart.products) {
         const product = item.product;
         const quantity = item.quantity;
-        const stock = item.product.stock;
+        const stock = product.stock; // Asegúrate de que `stock` se esté obteniendo correctamente
+        console.log(
+          `Processing product: ${product.title}, Quantity: ${quantity}, Stock: ${stock}`
+        ); // Log para cada producto
 
-        quantity > stock
-          ? insufficientStock.push(product)
-          : buyProducts.push({ product, quantity }) &&
-            (await productService.updateProduct(product, {
-              stock: stock - quantity,
-            })) &&
-            (await cartService.deleteProduct(cart, product));
-      });
+        if (quantity > stock) {
+          insufficientStock.push(product);
+          console.log(`Insufficient stock for product: ${product.title}`); // Log si hay stock insuficiente
+        } else {
+          buyProducts.push({ product, quantity });
+          console.log(`Adding product to buy list: ${product.title}`); // Log para agregar productos a la lista de compra
+
+          // Actualizar el stock y eliminar el producto del carrito
+          await productService.updateProduct(product, {
+            stock: stock - quantity,
+          });
+          await cartService.deleteProduct(cart, product);
+          console.log(
+            `Updated stock for product: ${product.title}. New stock: ${
+              stock - quantity
+            }`
+          ); // Log para el stock actualizado
+        }
+      }
 
       const totalAmount = buyProducts.reduce(
         (acc, item) => acc + item.quantity,
@@ -181,7 +200,11 @@ class CartController {
         .reduce((acc, item) => acc + item.product.price * item.quantity, 0)
         .toFixed(3);
 
+      console.log("Total amount of products purchased:", totalAmount); // Log del total de productos
+      console.log("Total price of purchase:", totalPrice); // Log del precio total
+
       if (!buyProducts.length) {
+        console.log("No products to buy, returning 404 for insufficient stock"); // Log si no hay productos para comprar
         return res.status(404).send({
           status: "Error",
           message: "Insufficient stock in the products",
@@ -196,25 +219,7 @@ class CartController {
           purchaser: req.user.email,
         });
 
-        await transport.sendMail({
-          from: objectConfig.gmailUser,
-          to: req.user.email,
-          subject: "Thanks for your purchase",
-          html: `<div>
-                              <h1>
-                                  Thanks for your purchase.
-                                  the total to pay is ${totalPrice}$
-                              </h1>
-                              <img src="cid:gracias-por-comprar">
-                        </div>`,
-          attachments: [
-            {
-              filename: "gracias-por-comprar.jpg",
-              path: "src/public/images/gracias-por-comprar.jpg",
-              cid: "gracias-por-comprar",
-            },
-          ],
-        });
+        console.log("Ticket created:", ticket); // Log para el ticket creado
 
         return res.send({
           status: "Success",
@@ -223,7 +228,10 @@ class CartController {
         });
       }
     } catch (error) {
-      logger.error(error);
+      logger.error("Error in cart purchase:", error); // Log para errores
+      return res
+        .status(500)
+        .send({ status: "Error", message: "Internal server error" });
     }
   };
 }

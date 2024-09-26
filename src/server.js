@@ -59,7 +59,6 @@ app.use(
   session({
     store: mongoStore.create({
       mongoUrl: process.env.MONGO_KEY_SECRET,
-      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 60 * 60 * 1000,
     }),
     secret: "s3cr3t0c0d3",
